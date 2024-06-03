@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-gh_mo75o51-k2rl06llbfn15kc!lu8&t(mooq*v0!gl%u&ya%u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.contrib.postgres', #это модуль Django, который предоставляет интеграцию с базой данных PostgreSQL 
             ],
         },
     },
@@ -73,13 +74,17 @@ WSGI_APPLICATION = 'NNmodel.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('nnmodel'),
+        'USER': os.environ.get('postgres'),
+        'PASSWORD': os.environ.get('postgres'),
+        'HOST': 'db',  
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
