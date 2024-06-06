@@ -16,3 +16,6 @@ class Result(models.Model):
     uploaded_data = models.ForeignKey(UploadedData, on_delete=models.CASCADE)
     neural_network_model = models.ForeignKey(NeuralNetworkModel, on_delete=models.CASCADE)
     result_values = models.TextField()
+
+
+  

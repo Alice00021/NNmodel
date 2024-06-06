@@ -30,6 +30,11 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'nnapp.apps.NnappConfig'
+    'nnapp.apps.NnappConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +69,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.contrib.postgres', #это модуль Django, который предоставляет интеграцию с базой данных PostgreSQL 
             ],
         },
     },
@@ -74,17 +79,18 @@ WSGI_APPLICATION = 'NNmodel.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('nnmodel'),
-        'USER': os.environ.get('postgres'),
-        'PASSWORD': os.environ.get('postgres'),
-        'HOST': 'db',  
-        'PORT': '5432',
+        'NAME': 'nnmodel',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '0.0.0.0',
+        'PORT':  '5432',
     }
 }
-
 
 
 # Password validation
