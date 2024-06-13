@@ -2,17 +2,6 @@ from rest_framework import serializers
 from .models import UploadedData, NeuralNetwork, Result
 from django.contrib.auth.models import User
 
-""" class DataSerializer(serializers.ModelSerializer):
-    
-    uploaded_by_name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = UploadedData
-        fields = ('upload_date', 'uploaded_by_name', 'id', 'data_file')
-
-    def get_uploaded_by_name(self, obj):
-        return obj.uploaded_by.username if obj.uploaded_by else None """
-
 class UploadedDataSerializer(serializers.Serializer):
     data_file = serializers.FileField()
     upload_date = serializers.DateTimeField(read_only=True)
