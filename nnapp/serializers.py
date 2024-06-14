@@ -2,8 +2,12 @@ from rest_framework import serializers
 from .models import UploadedData, NeuralNetwork, Result
 from django.contrib.auth.models import User
 
-class UploadedDataSerializer(serializers.Serializer):
-    data_file = serializers.FileField()
+class UploadedDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedData
+        fields = ['data_file', 'uploaded_by']
+
+    """ data_file = serializers.FileField()
     upload_date = serializers.DateTimeField(read_only=True)
     uploaded_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
 
@@ -15,10 +19,14 @@ class UploadedDataSerializer(serializers.Serializer):
         instance.upload_date = validated_data.get("upload_date", instance.upload_date)
         instance.uploaded_by = validated_data.get("uploaded_by", instance.uploaded_by)
         instance.save()
-        return instance
+        return instance """
 
-class NeuralNetworkSerializer(serializers.Serializer):
-    model_name = serializers.CharField(max_length=100)
+class NeuralNetworkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NeuralNetwork
+        fields = ['model_name', 'description']
+
+    """ model_name = serializers.CharField(max_length=100)
     description = serializers.CharField()
     model_file = serializers.FileField(read_only=True)
     upload_date = serializers.DateTimeField(read_only=True)
@@ -30,7 +38,7 @@ class NeuralNetworkSerializer(serializers.Serializer):
         instance.model_name = validated_data.get("model_name", instance.model_name)
         instance.description = validated_data.get("description", instance.description)
         instance.save()
-        return instance
+        return instance """
     
 
 
