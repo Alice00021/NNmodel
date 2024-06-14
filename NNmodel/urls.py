@@ -1,17 +1,14 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
+from nnapp.views import *
 
-from nnapp.views import DataAPIList, DataAPIUpdate, DataAPIDetailView
-from nnapp.views import NeuralNetworkAPIView
-
+router = routers.SimpleRouter()
+router.register(r'datalist', UploadedDataViewSet)
+router.register(r'model', NeuralNetworkViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/datalist/', DataAPIList.as_view()),
-    path('api/v1/datalist/<int:pk>/',DataAPIUpdate.as_view()),
-    path('api/v1/datalistdetail/<int:pk>/',DataAPIDetailView.as_view()),
-"""     path('api/v1/model/', NeuralNetworkAPIView.as_view()),
-    path('api/v1/model/<int:pk>/', NeuralNetworkAPIView.as_view()), """
-
+    path('api/v1/',include(router.urls)),
 ]
 
