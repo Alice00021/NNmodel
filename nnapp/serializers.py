@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
  
 class UploadedDataSerializer(serializers.ModelSerializer):
+    uploaded_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = UploadedData
         fields = ['data_file', 'uploaded_by']
