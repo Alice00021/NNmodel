@@ -16,7 +16,7 @@ class UploadedDataAPIList(generics.ListCreateAPIView):
 class UploadedDataAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = UploadedData.objects.all()
     serializer_class = UploadedDataSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 class UploadedDataAPIDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = UploadedData.objects.all()
@@ -27,17 +27,22 @@ class UploadedDataAPIDestroy(generics.RetrieveUpdateDestroyAPIView):
 class NeuralNetworkAPIList(generics.ListCreateAPIView):
     queryset = NeuralNetwork.objects.all()
     serializer_class = NeuralNetworkSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class NeuralNetworkAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = NeuralNetwork.objects.all()
     serializer_class = NeuralNetworkSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 class NeuralNetworkAPIDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = NeuralNetwork.objects.all()
     serializer_class = NeuralNetworkSerializer
-
+    permission_classes = [IsOwnerOrReadOnly]
 #####################Result###################################################
-
+class ResultAPIList(generics.ListCreateAPIView):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class ResultAPIListDestroy(generics.RetrieveDestroyAPIView):
     queryset = Result.objects.all()
