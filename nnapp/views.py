@@ -7,11 +7,17 @@ from django.contrib.auth.models import User
 from rest_framework import authentication, permissions
 from .permissions import *
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django.contrib import messages
+from django.shortcuts import render, redirect
 #####################UploadedData###################################################
 class UploadedDataAPIList(generics.ListCreateAPIView):
     queryset = UploadedData.objects.all()
     serializer_class = UploadedDataSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    @staticmethod
+    def upload_form_view(request):
+        return render(request, 'upload_form.html')
 
 class UploadedDataAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = UploadedData.objects.all()
@@ -58,3 +64,21 @@ class UserCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
+    @staticmethod
+    def register_view(request):
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            confirm_password = request.POST['confirm_password']
+            
+            if password == confirm_password:
+                # Создаем пользователя
+                user = User.objects.create_user(username=username, password=password)
+                user.save()
+                messages.success(request, 'Registration successful. Please log in.')
+                return redirect('api-v1-datalist')  # Редирект на страницу логина или другую страницу
+            else:
+                messages.error(request, 'Passwords do not match.')
+        
+        # Если метод GET или произошла ошибка, отображаем форму регистрации
+        return render(request, 'register.html')

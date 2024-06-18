@@ -12,7 +12,7 @@ class NeuralNetworkSerializer(serializers.ModelSerializer):
     uploaded_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = NeuralNetwork
-        fields = ['model_name', 'description']
+        fields = ['model_name', 'description', 'model_file', 'uploaded_by']
 
 
 class ResultSerializer(serializers.ModelSerializer):
