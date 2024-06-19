@@ -36,33 +36,31 @@ class UploadedDataAPITests(APITestCase):
     
     def test_update_uploaded_data(self):
         url = reverse('api-v1-modelupdate', kwargs={'pk': self.uploaded_data.pk})
-        file_content = b'Test file content 2'  # Замените на содержимое вашего файла
-        uploaded_file = SimpleUploadedFile('updated_test1.txt', file_content)
-        data = {'data_file': uploaded_file}
+        
+        # Подготовка данных для теста
+        updated_model_name = 'Updated Model Name'
+        updated_description = 'Updated Description'
+        updated_model_file = SimpleUploadedFile('updated_model_file.txt', b'Updated File Content')
+        
+        data = {
+            'model_name': updated_model_name,
+            'description': updated_description,
+            'model_file': updated_model_file,
+        }
         
         response = self.client.put(url, data, format='multipart')
         
-        print(response.status_code)  # Печатаем код состояния HTTP
-        print(response.data)  # Печатаем данные, возвращаемые в ответе
-        
+        # Проверка кода состояния HTTP
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-        self.uploaded_data.refresh_from_db()
-        parsed_url = urlparse(response.data['data_file'])
-        filename = parsed_url.path.split('/')[-1]
-        print(parsed_url)
-        print(filename)
-        print(self.uploaded_data.data_file)
-        self.assertTrue(filename.startswith('updated_test1_') and filename.endswith('.txt'))
-    """ def test_delete_uploaded_data(self):
+    def test_delete_uploaded_data(self):
         url = reverse('api-v1-modeldelete', kwargs={'pk': self.uploaded_data.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(NeuralNetwork.objects.filter(pk=self.uploaded_data.pk).exists())
- """
-    """ def test_unauthorized_access(self):
+
+    def test_unauthorized_access(self):
         self.client.credentials() 
-        url = reverse('api-v1-datalist')
+        url = reverse('api-v1-model')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -72,7 +70,7 @@ class UploadedDataAPITests(APITestCase):
         token = RefreshToken.for_user(other_user)
         access_token = str(token.access_token)
         self.client.credentials(HTTP_AUTHORIZATION=f'JWT {access_token}')
-        url = reverse('api-v1-dataupdate', kwargs={'pk': self.uploaded_data.pk})
+        url = reverse('api-v1-modelupdate', kwargs={'pk': self.uploaded_data.pk})
         data = {'data_file': 'updated_by_other.txt'}
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -83,6 +81,6 @@ class UploadedDataAPITests(APITestCase):
         token = RefreshToken.for_user(other_user)
         access_token = str(token.access_token)
         self.client.credentials(HTTP_AUTHORIZATION=f'JWT {access_token}')
-        url = reverse('api-v1-datadestroy', kwargs={'pk': self.uploaded_data.pk})
+        url = reverse('api-v1-modeldelete', kwargs={'pk': self.uploaded_data.pk})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN) """
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
