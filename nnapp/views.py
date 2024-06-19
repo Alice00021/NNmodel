@@ -53,6 +53,7 @@ class ResultAPIList(generics.ListCreateAPIView):
 class ResultAPIListDestroy(generics.RetrieveDestroyAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
+    [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 #############################################################################################
 
