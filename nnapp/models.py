@@ -8,6 +8,11 @@ class UploadedData(models.Model):
     upload_date = models.DateTimeField(default=timezone.now)
     uploaded_by = models.ForeignKey(User,  on_delete=models.CASCADE, default=None)
 
+class TrainingConfig(models.Model):
+    learning_rate = models.FloatField(default=0.001)
+    batch_size = models.IntegerField(default=32)
+    epochs = models.IntegerField(default=10)
+    
 class NeuralNetwork(models.Model):
     model_name = models.CharField(max_length=100)
     description = models.TextField()

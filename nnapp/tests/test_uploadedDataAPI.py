@@ -50,8 +50,6 @@ class UploadedDataAPITests(APITestCase):
 
 
     def test_update_uploaded_data(self):
-        print("КЛЮЧ")
-        print(self.uploaded_data.pk)
         url = reverse('api-v1-dataupdate', kwargs={'pk': self.uploaded_data.pk})
         file_content = b'Test file content 2'  # Замените на содержимое вашего файла
         uploaded_file = SimpleUploadedFile('updated_test1.txt', file_content)
@@ -61,9 +59,6 @@ class UploadedDataAPITests(APITestCase):
         self.uploaded_data.refresh_from_db()
         parsed_url = urlparse(response.data['data_file'])
         filename = parsed_url.path.split('/')[-1]
-        print(parsed_url)
-        print(filename)
-        print(self.uploaded_data.data_file)
         self.assertTrue(filename.startswith('updated_test1') and filename.endswith('.txt'))
 
     def test_delete_uploaded_data(self):
