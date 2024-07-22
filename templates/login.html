@@ -1,0 +1,67 @@
+<!-- login.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="login-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Login</button>
+    </form>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/api/token/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access && data.refresh) {
+                    localStorage.setItem('access', data.access);
+                    localStorage.setItem('refresh', data.refresh);
+                    setInterval(refreshToken, 4 * 60 * 1000); // Обновление каждые 4 минуты
+                } else {
+                    alert('Login failed');
+                }
+            });
+        });
+
+        function refreshToken() {
+            fetch('/api/token/refresh/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    refresh: localStorage.getItem('refresh')
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access) {
+                    localStorage.setItem('access', data.access);
+                } else {
+                    alert('Session expired. Please login again.');
+                    window.location.href = '/login/';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
