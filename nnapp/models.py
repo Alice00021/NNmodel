@@ -22,10 +22,11 @@ class NeuralNetwork(models.Model):
 
 
 class Result(models.Model):
-    uploaded_data = models.ForeignKey(UploadedData, on_delete=models.CASCADE)
     neural_network_model = models.ForeignKey(NeuralNetwork, on_delete=models.CASCADE)
-    result_values = models.TextField()
-    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    trained_model_file = models.FileField(upload_to='trained_models/', default=None)
+    downloaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    download_timestamp = models.DateTimeField( default=timezone.now)
+
    
 
 

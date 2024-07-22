@@ -9,6 +9,13 @@ from .permissions import *
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.views.decorators.csrf import csrf_protect
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 #####################UploadedData###################################################
 class UploadedDataAPIList(generics.ListCreateAPIView):
     queryset = UploadedData.objects.all()
@@ -66,6 +73,7 @@ class UserCreate(generics.ListCreateAPIView):
         serializer.save()
 
     @staticmethod
+    @csrf_protect
     def register_view(request):
         if request.method == 'POST':
             username = request.POST['username']
@@ -77,9 +85,31 @@ class UserCreate(generics.ListCreateAPIView):
                 user = User.objects.create_user(username=username, password=password)
                 user.save()
                 messages.success(request, 'Registration successful. Please log in.')
-                return redirect('api-v1-datalist')  # Редирект на страницу логина или другую страницу
+                return redirect('login/')  # Редирект на страницу логина или другую страницу
             else:
                 messages.error(request, 'Passwords do not match.')
         
         # Если метод GET или произошла ошибка, отображаем форму регистрации
         return render(request, 'register.html')
+    
+    @staticmethod
+    def obtain_token_view(request):
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                token_pair = TokenObtainPairView().post(request)
+                return Response(token_pair.data)
+            else:
+                return Response({'error': 'Invalid credentials'}, status=400)
+        
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
+    
+    """ @staticmethod
+    def logout_view(request):
+        logout(request)
+        return redirect('api-v1-datalist')   """
+    

@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 from rest_framework.authentication import BasicAuthentication
-
+from dotenv import load_dotenv
 from datetime import timedelta
 
+# Загружаем переменные окружения из файла .env
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,12 +74,12 @@ WSGI_APPLICATION = 'NNmodel.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nnmodel',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '0.0.0.0',
-        'PORT':  '5432',
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
